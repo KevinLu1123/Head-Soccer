@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Oct  6 10:27:10 2017
+Created on Fri Dec 10:27:10 2017
 
-@author: junlu
+@author: Kevin Lu
 """
 
 #import numpy as np
@@ -195,12 +195,12 @@ while(cap.isOpened()):
         if ((z1-z2) >= 2 and z1 >= targetScore):
             flag = False
             cv2.rectangle(frame,(150,100),(width-150,int(height/2)),(255,0,255),3)
-            cv2.putText(frame, "K Wins!",(width-200,int(height/2)), font, 1,(255,0,255),2,cv2.LINE_AA)#str(Player_1.name," Wins!"),(150,180), font, 3,(255,0,255),2,cv2.LINE_AA)
+            cv2.putText(frame, "K Wins!",(150,int(height/2) - 50), font, 3,(255,0,255),2,cv2.LINE_AA)#str(Player_1.name," Wins!"),(150,180), font, 3,(255,0,255),2,cv2.LINE_AA)
             ball.x_position, ball.y_position, xvelocity, yvelocity, headvelocity_x, headvelocity_y, coefficientFactor = reset_to_center()
         if ((z2-z1) >= 2 and z2 >= targetScore):
             flag = False
-            cv2.rectangle(frame,(150,100),(int(width/2),int(height/2)),(0,255,0),3)
-            cv2.putText(frame,"J Wins!",(int(width/2 -50),int(height/2)), font, 1,(0,255,0),2,cv2.LINE_AA)#str(Player_2.name," Wins!"),(150,180), font, 3,(0,255,0),2,cv2.LINE_AA)
+            cv2.rectangle(frame,(150,100),(width-150,int(height/2)),(0,255,0),3)
+            cv2.putText(frame, "J Wins!",(150,int(height/2) - 50), font, 3,(0,255,0),2,cv2.LINE_AA)#str(Player_2.name," Wins!"),(150,180), font, 3,(0,255,0),2,cv2.LINE_AA)
             ball.x_position, ball.y_position, xvelocity, yvelocity, headvelocity_x, headvelocity_y, coefficientFactor = reset_to_center()       
           
         cv2.imshow('frame',frame)
