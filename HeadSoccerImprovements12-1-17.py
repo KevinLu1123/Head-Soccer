@@ -8,6 +8,7 @@ Created on Fri Dec 10:27:10 2017
 #import numpy as np
 import cv2
 import math
+import time
 
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 
@@ -29,7 +30,7 @@ prev_y = head_center[1]
 x = width/2
 y = 0
 slope = 0
-
+time.sleep(3)
 #def ballmovementcollision(x,ca,y,cb,slope):
 #    y = slope * (x - ca) + cb
 class Player():
@@ -116,12 +117,14 @@ def checkGoal(x,z1,z2,y,xvelocity,yvelocity):
         ball.y_position = 0
         xvelocity = 0
         yvelocity = 0
+        time.sleep(1)
     if ball.x_position >= width-80:
         z2 = scoring(z2,flag)
         ball.x_position = width/2
         ball.y_position = 0
         xvelocity = 0
         yvelocity = 0
+        time.sleep(1)
     return (z1,z2,ball.x_position,ball.y_position,xvelocity, yvelocity)
 def scoring(z,flag):
     z = z+1
@@ -133,6 +136,7 @@ def reset_to_center():
     yvelocity = 0
     headvelocity_x,headvelocity_y = 0,0
     coefficientFactor = 0
+    time.sleep(1)
     return ball.x_position, ball.y_position, xvelocity, yvelocity, headvelocity_x, headvelocity_y, coefficientFactor
 
 flag = True
@@ -202,7 +206,6 @@ while(cap.isOpened()):
             cv2.rectangle(frame,(150,100),(width-150,int(height/2)),(0,255,0),3)
             cv2.putText(frame, "J Wins!",(150,int(height/2) - 50), font, 3,(0,255,0),2,cv2.LINE_AA)#str(Player_2.name," Wins!"),(150,180), font, 3,(0,255,0),2,cv2.LINE_AA)
             ball.x_position, ball.y_position, xvelocity, yvelocity, headvelocity_x, headvelocity_y, coefficientFactor = reset_to_center()       
-          
         cv2.imshow('frame',frame)
         spacebar = cv2.waitKey(32) & 0xff
         if spacebar == 32:
