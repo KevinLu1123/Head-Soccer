@@ -25,14 +25,12 @@ z1 = 0
 z2 = 0
 xvelocity = 0
 yvelocity = 0
-coefficientFactor = 0
 head_center = (int(width/2),int(height/2))
 prev_x = head_center[0]
 prev_y = head_center[1]
 x = width/2
 y = 0
 slope = 0
-#time.sleep(3)
 #def ballmovementcollision(x,ca,y,cb,slope):
 #    y = slope * (x - ca) + cb
 class Player():
@@ -48,12 +46,7 @@ class Ball():
     speed = 0 #speed is determined by speed of head x mass of head / mass of ball
     x_position = x
     y_position = y
-    #def boundary (y, yvelocity, coefficientFactor):
-     #   if y >= height - 30:
-      #      coefficientFactor = coefficientFactor + 1
-       #     yvelocity = -yvelocity * (0.9**coefficientFactor)
-        #return yvelocity, coefficientFactor
-    def boundary (ygravity, y, yvelocity):       #450 is for Kevin's screen
+    def boundary (ygravity, y, yvelocity):
         if(y >= height-30):
             ygravity = 0
             yvelocity = int(yvelocity * -0.9)
@@ -62,14 +55,14 @@ class Ball():
         return ygravity,yvelocity
 def velocityx(x, head_center, xvelocity):
     global prev_x
-    headvelocity_x = head_center[0] - prev_x
+    headvelocity_x = (head_center[0] - prev_x)
     prev_x = head_center[0]
     xvelocity = -1*int(Player.headmass/ball.mass) * headvelocity_x
     return (headvelocity_x, prev_x, xvelocity)
 
 def velocityy(y, head_center, yvelocity):
     global prev_y
-    headvelocity_y = head_center[1] - prev_y
+    headvelocity_y = (head_center[1] - prev_y)
     prev_y = head_center[1]
     yvelocity = int(Player.headmass/ball.mass) * headvelocity_y
     return (headvelocity_y, prev_y, yvelocity)
@@ -88,7 +81,7 @@ def hit(x, y, head_center):
     print("distance between head and ball centers: ", distanceheadball)
     return(slope,ball.x_position,ball.y_position,xvelocity,yvelocity)   
     
-def xUpdate(x,):
+def xUpdate(x):
     _, ball.x_position, _, xvelocity, _ = hit(ball.x_position,ball.y_position,head_center)#call function for if head hits ball
     ball.x_position = ball.x_position + xvelocity #reposition ball based on the hit
     return(ball.x_position,xvelocity)
@@ -96,12 +89,7 @@ def xUpdate(x,):
 safetybouncecount = 0
 def yUpdate(safetybouncecount, y):
     _, _, ball.y_position, _, yvelocity = hit(ball.x_position,ball.y_position,head_center)
-    #ygravity = 2 + int((t**2)/32)
     ygravity = 2
-    #ball.y_position = ball.y_position + yvelocity + ygravity
-    #yvelocity,coefficientFactor = Ball.boundary(ball.y_position, yvelocity,coefficientFactor) # flip direction in the event of a bounce
-    #if ball.y_position >= 450:
-     #   ball.y_position = 450 - (yvelocity + ygravity)
     ygravity,yvelocity = Ball.boundary(ygravity, ball.y_position, yvelocity)    
     if(ygravity == 0):
         safetybouncecount = safetybouncecount + 1
@@ -122,51 +110,27 @@ def yUpdate(safetybouncecount, y):
     
     #print (y)
     return(ball.y_position, safetybouncecount, yvelocity)
-    #else:
-    #    y = y + yvelocity + ygravity #reposition ball based on hit
-    #return(ball.y_position)
-  
-    # JAMES BOUNCE VERSION - REMOVE T
-#    if y > 450:
-#        y = 480
-#        yvelocity = int(-1 * math.sqrt(2*2*y) * (0.9**coefficientFactor))
-#        print("yvelocity" , yvelocity , "\n")
-#        constant = 625
-#        coefficientFactor = coefficientFactor+1
-#    y = ( int(yvelocity*t) + int( (t**2) ) + constant)
-#    print("yupdate" , y , "\n\t yvelocity*t = ",(yvelocity*t),"\n\t t^2 = ",(t**2),"\n\t c = ",constant,"\n")
-    
-    #print (y)
-#    return(t,y,yvelocity,constant,coefficientFactor)
-
+def checkOutofBounds(x, y, xvelocity, yvelocity):
+    if (ball.y_position < 0):
+        ball.x_position, ball.y_position, xvelocity, yvelocity = reset_to_center()
+    return (ball.x_position, ball.y_position, xvelocity, yvelocity)
 def checkGoal(x,z1,z2,y,xvelocity,yvelocity):
     if ball.x_position <= 40:
-        z1 = scoring(z1,flag)
-        ball.x_position = width/2
-        ball.y_position = 0
-        xvelocity = 0
-        yvelocity = 0
-        #time.sleep(1)
+        z1 = scoring(z1)
+        ball.x_position, ball.y_position, xvelocity, yvelocity = reset_to_center()
     if ball.x_position >= width-80:
-        z2 = scoring(z2,flag)
-        ball.x_position = width/2
-        ball.y_position = 0
-        xvelocity = 0
-        yvelocity = 0
-        #time.sleep(1)
+        z2 = scoring(z2)
+        ball.x_position, ball.y_position, xvelocity, yvelocity = reset_to_center()
     return (z1,z2,ball.x_position,ball.y_position,xvelocity, yvelocity)
-def scoring(z,flag):
+def scoring(z):
     z = z+1
     print(z)
     return z    
 def reset_to_center():
     (ball.x_position,ball.y_position) = ((width/2),0)
-    xvelocity = 0
-    yvelocity = 0
-    headvelocity_x,headvelocity_y = 0,0
-    coefficientFactor = 0
-    #time.sleep(1)
-    return ball.x_position, ball.y_position, xvelocity, yvelocity, headvelocity_x, headvelocity_y, coefficientFactor
+    xvelocity, yvelocity = 0,0
+    time.sleep(0.01)
+    return ball.x_position, ball.y_position, xvelocity, yvelocity
 
 targetScore = 5
 
@@ -187,8 +151,9 @@ while(cap.isOpened()):
             head_center = (center_x, center_y)
             
         Ball.x_position,xvelocity = xUpdate(Ball.x_position)
-        z1,z2,Ball.x_position,Ball.y_position,xvelocity,yvelocity = checkGoal(Ball.x_position,z1,z2,Ball.y_position,xvelocity,yvelocity)
         
+        ball.x_position, ball.y_position, xvelocity, yvelocity= checkOutofBounds(Ball.x_position,Ball.y_position, xvelocity,yvelocity)
+        z1,z2,Ball.x_position,Ball.y_position,xvelocity,yvelocity = checkGoal(Ball.x_position,z1,z2,Ball.y_position,xvelocity,yvelocity)
         
         Ball.y_position, safetybouncecount, yvelocity = yUpdate(safetybouncecount,Ball.y_position)
         
@@ -201,7 +166,6 @@ while(cap.isOpened()):
         print("Ball position x,y: ", Ball.x_position, Ball.y_position)
         print("Ball velocity x: ", xvelocity)
         print("Ball velocity y: ", yvelocity)
-        print("Coefficient Factor: ", coefficientFactor)
         print("Player 1: ",z1)
         print("Player 2: ",z2)
         print("Position: ({},{}) ".format(Ball.x_position, Ball.y_position))
@@ -227,21 +191,19 @@ while(cap.isOpened()):
         cv2.line(frame,(0,height),(width,height),(255,0,255),40)
         
         if ((z1-z2) >= 2 and z1 >= targetScore):
-            flag = False
             cv2.rectangle(frame,(150,100),(width-150,int(height/2)),(255,0,255),3)
             cv2.putText(frame, "K Wins!",(150,int(height/2) - 50), font, 3,(255,0,255),2,cv2.LINE_AA)#str(Player_1.name," Wins!"),(150,180), font, 3,(255,0,255),2,cv2.LINE_AA)
-            ball.x_position, ball.y_position, xvelocity, yvelocity, headvelocity_x, headvelocity_y, coefficientFactor = reset_to_center()
+            ball.x_position, ball.y_position, xvelocity, yvelocity = reset_to_center()
         if ((z2-z1) >= 2 and z2 >= targetScore):
-            flag = False
             cv2.rectangle(frame,(150,100),(width-150,int(height/2)),(0,255,0),3)
             cv2.putText(frame, "J Wins!",(150,int(height/2) - 50), font, 3,(0,255,0),2,cv2.LINE_AA)#str(Player_2.name," Wins!"),(150,180), font, 3,(0,255,0),2,cv2.LINE_AA)
-            ball.x_position, ball.y_position, xvelocity, yvelocity, headvelocity_x, headvelocity_y, coefficientFactor = reset_to_center()       
+            ball.x_position, ball.y_position, xvelocity, yvelocity = reset_to_center()       
         cv2.imshow('frame',frame)
         spacebar = cv2.waitKey(32) & 0xff
         if spacebar == 32:
             z1 = 0
             z2 = 0
-            ball.x_position, ball.y_position, xvelocity, yvelocity, headvelocity_x, headvelocity_y, coefficientFactor = reset_to_center()
+            ball.x_position, ball.y_position, xvelocity, yvelocity = reset_to_center()
             
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
